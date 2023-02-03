@@ -14,17 +14,17 @@ int	main(int argc, char *argv[]){
 	int 	numbytesrecv;
 	char 	buff[BUFSIZ+1];
 	char 	*host;
-	char 	*dados;	
+	int		num_msg;	
 	unsigned int tamEnd;
 
 	if(argc != 4) {
-		puts("Uso correto: ./cliente-udp <nome-servidor> <porta> <dados>");
+		puts("Uso correto: ./cliente-udp <nome-servidor> <porta> <num_msg>");
 		fprintf(stderr, "Erro:	Número errado de argumentos. Tente:\n./cliente-udp <nome-servidor> <porta> <dados>\n");
 		exit(1);
 	}
 
-	host	= argv[1];	//pega o nome do host
-	dados	= argv[3];	//pega os dados
+	host	= argv[1];			//pega o nome do host
+	num_msg	= atoi(argv[3]);	//pega o num de msgs
 
 	if((hostP = gethostbyname(host)) == NULL){
 		fprintf(stderr, "Erro:	Não foi possível encontrar o endereço IP do servidor\n");
@@ -42,17 +42,13 @@ int	main(int argc, char *argv[]){
 		exit(1);
 	}
 
-	if(sendto(sockID, dados, strlen(dados)+1, 0, (struct sockaddr *) &endSockServ, sizeof endSockServ) != strlen(dados)+1){
-		fprintf(stderr, "Erro:	Não foi possível enviar os dados\n");
-		exit(1);
+	for (int i_msg = 0 ; i_msg < num_msg ; i_msg++){
+		if(sendto(sockID, , sizeof(i_msg), 0, (struct sockaddr *) &endSockServ, sizeof endSockServ) != strlen(dados)+1){
+			fprintf(stderr, "Erro:	Não foi possível enviar a mensagem %d\n", i_msg);
+			exit(1);
+		}
 	}
 
-/* end while }*/
-
-    recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockServ, &tamEnd);
-
-    printf("O cliente recebeu a mensagem---->		%s\n", buff);
-   
     close(sockID);
     exit(0);
 

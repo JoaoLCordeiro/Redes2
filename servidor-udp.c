@@ -24,7 +24,6 @@ int main(int argc, char *argv[]){
     }
 
 	gethostname (localhost, MAXHOSTNAME);
-	fprintf(stderr, "Servidor ligando...\nServidor ligado :)\nOlá\nMeu nome é %s\nBom te ver, usuário\n", localhost);
 
 	if ((hostP = gethostbyname(localhost)) == NULL){
 		fprintf(stderr, "Erro:	Não foi possível encontrar o endereço IP do servidor\n");
@@ -47,15 +46,64 @@ int main(int argc, char *argv[]){
 	if (bind(sockID, (struct sockaddr *) &endSockServ,sizeof(endSockServ)) < 0){
 		fprintf(stderr, "Erro:	A função bind retornou erro\n");
 		exit (1);
-	}		
- 
-    while (1){
-       tamEnd = sizeof(endSockClie); 
-       fprintf(stdout, "Esperando uma mensagem...\n");
-       recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
-       fprintf(stdout, "O servidor recebeu a mensagem---->	%s\n", buff);
-       sendto(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, tamEnd);
 	}
+
+	fprintf(stderr, "Servidor ligado :)\nOlá\nMeu nome é %s\nBom te ver, usuário\n\n", localhost);	
+
+	
+
+	while (1){
+		//while maior /\, representa o servidor rodando
+
+		//primeira mensagem informa quantos números chegarão
+		recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
+		int		n_msg	= atoi(buff);
+
+		int		num_recebido;
+		int		num_anterior	= -1;
+		int		maior_recebido	= 0;
+		int*	chegou			= (int *) calloc (n_msg,sizeof(int));
+		int*	desord			= (int *) malloc (n_msg*sizeof(int));	//resolver no cpp? vetor de tamanho variavel
+		int		indic_desord	= 0;
+
+		//while menor \/, representa o recebimento das mensagens
+    	while (1){
+			//versão original do site do elias \/
+    		/*tamEnd = sizeof(endSockClie); 
+    		fprintf(stdout, "Esperando uma mensagem...\n");
+    		recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
+    		fprintf(stdout, "O servidor recebeu a mensagem---->	%s\n", buff);
+    		sendto(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, tamEnd);*/
+
+			//implementar um timeout que sai desse while caso, depois da primeira mensagem, ele pare de receber msg
+			//isso quer dizer q as mensagens acabaram
+			recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
+			num_recebido = atoi(buff);
+
+			if (num_recebido != num_anterior + 1){
+				desord[indic_desord] = num_recebido;
+				indic_desord++;
+			}
+
+			chegou[num_recebido] = 1;
+
+			num_anterior = num_recebido;
+		}
+
+		//a partir daqui, no vetor "chegou", os indices com 0 não chegaram
+		//e o vetor desord guarda quem não chegou depois do numero anterior
+
+		for (int i = 0 ; i < n_msg ; i++)
+			//caso a mensagem n chegou
+			if (! chegou[i])
+				//talvez mandar isso para um arquivo ao invés da stdout
+				fprintf(stdout, "A mensagem de número %d não chegou\n", i);	
+
+		for (int i = 0 ; i < indic_desord ; i++)
+			//talvez mandar isso para um arquivo ao invés da stdout
+			fprintf(stdout, "A mensagem de número %d chegou fora de ordem\n", i);	
+	}
+
 
 	return 1;
 }
