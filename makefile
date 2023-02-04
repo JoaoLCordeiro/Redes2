@@ -5,16 +5,16 @@ OBJSC = cliente-udp.o
 all: servidor-udp cliente-udp
 
 servidor-udp: $(OBJSS)
-	mpic++ -o servidor-udp $(CFLAGS) $(OBJSS)
+	gcc -o servidor-udp $(CFLAGS) $(OBJSS)
 
 cliente-udp: $(OBJSC)
-	mpic++ -o cliente-udp $(CFLAGS) $(OBJSC)
+	gcc -o cliente-udp $(CFLAGS) $(OBJSC)
 
 servidor-udp.o: servidor-udp.c
-	mpic++ $(CFLAGS) -c servidor-udp.c
+	gcc $(CFLAGS) -c servidor-udp.c
 
 cliente-udp.o: cliente-udp.c
-	mpic++ $(CFLAGS) -c cliente-udp.c
+	gcc $(CFLAGS) -c cliente-udp.c
 
 clean:
 	-rm -f *~ *.o

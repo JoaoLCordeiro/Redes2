@@ -14,8 +14,8 @@ int	main(int argc, char *argv[]){
 	int 	numbytesrecv;
 	char 	buff[BUFSIZ+1];
 	char 	*host;
-	int		num_msg;	
-	unsigned int tamEnd;
+	long int		num_msg;	
+	unsigned int	tamEnd;
 
 	if(argc != 4) {
 		puts("Uso correto: ./cliente-udp <nome-servidor> <porta> <num_msg>");
@@ -42,8 +42,16 @@ int	main(int argc, char *argv[]){
 		exit(1);
 	}
 
-	for (int i_msg = 0 ; i_msg < num_msg ; i_msg++){
-		if(sendto(sockID, , sizeof(i_msg), 0, (struct sockaddr *) &endSockServ, sizeof endSockServ) != strlen(dados)+1){
+	sprintf(buff, "%d", num_msg);
+
+	if(sendto(sockID, buff, strlen(buff)+1, 0, (struct sockaddr *) &endSockServ, sizeof endSockServ) != strlen(buff)+1){
+		fprintf(stderr, "Erro:	Não foi possível enviar a mensagem inicial\n");
+		exit(1);
+	}
+
+	for (long int i_msg = 0 ; i_msg < num_msg ; i_msg++){
+		sprintf(buff, "%d", i_msg);
+		if(sendto(sockID, buff, strlen(buff)+1, 0, (struct sockaddr *) &endSockServ, sizeof endSockServ) != strlen(buff)+1){
 			fprintf(stderr, "Erro:	Não foi possível enviar a mensagem %d\n", i_msg);
 			exit(1);
 		}

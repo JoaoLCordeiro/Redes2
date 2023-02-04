@@ -50,21 +50,18 @@ int main(int argc, char *argv[]){
 
 	fprintf(stderr, "Servidor ligado :)\nOlá\nMeu nome é %s\nBom te ver, usuário\n\n", localhost);	
 
-	
-
 	while (1){
 		//while maior /\, representa o servidor rodando
 
 		//primeira mensagem informa quantos números chegarão
 		recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
-		int		n_msg	= atoi(buff);
+		long int		n_msg	= atoi(buff);
 
-		int		num_recebido;
-		int		num_anterior	= -1;
-		int		maior_recebido	= 0;
-		int*	chegou			= (int *) calloc (n_msg,sizeof(int));
-		int*	desord			= (int *) malloc (n_msg*sizeof(int));	//resolver no cpp? vetor de tamanho variavel
-		int		indic_desord	= 0;
+		long int	num_recebido;
+		long int	num_anterior	= -1;
+		int*		chegou			= (int *) calloc (n_msg,sizeof(int));
+		int*		desord			= (int *) malloc (n_msg*sizeof(int));	//resolver no cpp? vetor de tamanho variavel
+		long int	indic_desord	= 0;
 
 		//while menor \/, representa o recebimento das mensagens
     	while (1){
@@ -93,15 +90,15 @@ int main(int argc, char *argv[]){
 		//a partir daqui, no vetor "chegou", os indices com 0 não chegaram
 		//e o vetor desord guarda quem não chegou depois do numero anterior
 
-		for (int i = 0 ; i < n_msg ; i++)
+		for (long int i = 0 ; i < n_msg ; i++)
 			//caso a mensagem n chegou
 			if (! chegou[i])
 				//talvez mandar isso para um arquivo ao invés da stdout
-				fprintf(stdout, "A mensagem de número %d não chegou\n", i);	
+				fprintf(stdout, "A mensagem de número %ld não chegou\n", i);	
 
-		for (int i = 0 ; i < indic_desord ; i++)
+		for (long int i = 0 ; i < indic_desord ; i++)
 			//talvez mandar isso para um arquivo ao invés da stdout
-			fprintf(stdout, "A mensagem de número %d chegou fora de ordem\n", i);	
+			fprintf(stdout, "A mensagem de número %ld chegou fora de ordem\n", i);	
 	}
 
 
