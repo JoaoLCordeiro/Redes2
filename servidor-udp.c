@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <poll.h>		//implementa o timeout
+
+#define TIMEOUT 1000*3
 
 #define TAMFILA      5
 #define MAXHOSTNAME 30
@@ -48,10 +51,15 @@ int main(int argc, char *argv[]){
 		exit (1);
 	}
 
-	fprintf(stderr, "Servidor ligado :)\nOlá\nMeu nome é %s\nBom te ver, usuário\n\n", localhost);	
+	fprintf(stderr, "Servidor ligado :)\nOlá\nMeu nome é %s\nBom te ver, usuário\n\n", localhost);
+
+	struct pollfd pfd;
+	pfd.fd		= sockID;
+	pfd.events	= POLLIN;
 
 	while (1){
 		//while maior /\, representa o servidor rodando
+
 
 		//primeira mensagem informa quantos números chegarão
 		recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
@@ -59,18 +67,16 @@ int main(int argc, char *argv[]){
 
 		long int	num_recebido;
 		long int	num_anterior	= -1;
-		int*		chegou			= (int *) calloc (n_msg,sizeof(int));
+		char*		chegou			= (char *) calloc (n_msg,sizeof(char));
 		int*		desord			= (int *) malloc (n_msg*sizeof(int));	//resolver no cpp? vetor de tamanho variavel
 		long int	indic_desord	= 0;
 
 		//while menor \/, representa o recebimento das mensagens
     	while (1){
-			//versão original do site do elias \/
-    		/*tamEnd = sizeof(endSockClie); 
-    		fprintf(stdout, "Esperando uma mensagem...\n");
-    		recvfrom(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, &tamEnd);
-    		fprintf(stdout, "O servidor recebeu a mensagem---->	%s\n", buff);
-    		sendto(sockID, buff, BUFSIZ, 0, (struct sockaddr *) &endSockClie, tamEnd);*/
+			//timeout
+			int retorno_poll	= poll(&pfd, 1, TIMEOUT);
+			if (retorno_poll == 0)
+				break;
 
 			//implementar um timeout que sai desse while caso, depois da primeira mensagem, ele pare de receber msg
 			//isso quer dizer q as mensagens acabaram
@@ -86,6 +92,7 @@ int main(int argc, char *argv[]){
 
 			num_anterior = num_recebido;
 		}
+		fprintf(stdout, "saiu do while de %ld\n", n_msg);
 
 		//a partir daqui, no vetor "chegou", os indices com 0 não chegaram
 		//e o vetor desord guarda quem não chegou depois do numero anterior
@@ -99,6 +106,9 @@ int main(int argc, char *argv[]){
 		for (long int i = 0 ; i < indic_desord ; i++)
 			//talvez mandar isso para um arquivo ao invés da stdout
 			fprintf(stdout, "A mensagem de número %ld chegou fora de ordem\n", i);	
+
+		free(chegou);
+		free(desord);
 	}
 
 
