@@ -17,8 +17,7 @@ int	main(int argc, char *argv[]){
 
 	//verifica o numero de argumentos
 	if(argc != 4) {
-		puts("Uso correto: ./cliente-udp <nome-servidor> <porta> <num_msg>");
-		fprintf(stderr, "Erro:	Número errado de argumentos. Tente:\n./cliente-udp <nome-servidor> <porta> <dados>\n");
+		fprintf(stderr, "Erro:	Número errado de argumentos. Tente:\n./cliente-udp <nome-servidor> <porta> <num_msg>\n");
 		exit(1);
 	}
 
