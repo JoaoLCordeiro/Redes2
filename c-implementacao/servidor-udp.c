@@ -73,16 +73,19 @@ int main(int argc, char *argv[]){
 		char* nom_arq_nchegou	= (char *) malloc (TAMNOMEARQ * sizeof(char));
 		char* nom_arq_desorde	= (char *) malloc (TAMNOMEARQ * sizeof(char));
 
-		strcpy (nom_arq_nchegou, "nchegou-");
-		strcpy (nom_arq_desorde, "desorde-");
+		//cria as strings que darao nome aos arquivos de logs
+		strcpy (nom_arq_nchegou, "c-nchegou-");
+		strcpy (nom_arq_desorde, "c-desorde-");
 		strcat (nom_arq_nchegou, buff);
 		strcat (nom_arq_desorde, buff);
 		strcat (nom_arq_nchegou, ".txt");
 		strcat (nom_arq_desorde, ".txt");
 
+		//cria os arquivos
 		FILE* f_nchegou = fopen (nom_arq_nchegou,"w+");
 		FILE* f_desorde = fopen (nom_arq_desorde,"w+");
 
+		//pega o número de mensagens
 		long int n_msg	= atoi(buff);
 
 		//detecta erro na abertura de arquivos
@@ -91,6 +94,7 @@ int main(int argc, char *argv[]){
 			exit(1);
 		}
 
+		//cria as variáveis usadas no processo de recebimento de mensagens
 		long int	num_recebido;
 		long int	num_anterior	= -1;
 		char*		chegou			= (char *) calloc (n_msg,sizeof(char));		//guarda se a mensagem do indice chegou
@@ -108,15 +112,12 @@ int main(int argc, char *argv[]){
 			num_recebido = atoi(buff);
 
 			//detecta se a mensagem está fora de ordem
-			/*if (num_recebido != num_anterior + 1){
-				desord[indic_desord] = num_recebido;
-				indic_desord++;
-			}*/
 			if (num_recebido < num_anterior){
 				desord[indic_desord] = num_recebido;
 				indic_desord++;
 			}
 
+			//registra que a mensagem chegou
 			chegou[num_recebido] = 1;
 
 			num_anterior = num_recebido;
@@ -126,6 +127,7 @@ int main(int argc, char *argv[]){
 		//a partir daqui, no vetor "chegou", os indices com 0 não chegaram
 		//e o vetor desord guarda quem não chegou depois do numero anterior
 
+		//escreveremos nos arquivos de log
 		for (long int i = 0 ; i < n_msg ; i++)
 			//caso a mensagem n chegou
 			if (! chegou[i])
