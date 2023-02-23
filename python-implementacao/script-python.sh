@@ -11,5 +11,5 @@ PORTA=1616
 # para bloqueantes
 for NMSG in 100 1000 10000 100000 1000000
 do
-    python3 ./python-implementacao/cliente-udp.py "$NOMESERV" "$PORTA" "$NMSG"
+    python3 cliente-udp.py "$NOMESERV" "$PORTA" "$NMSG"
 done
