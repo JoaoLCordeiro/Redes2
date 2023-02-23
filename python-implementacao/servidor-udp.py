@@ -33,6 +33,19 @@ if __name__ == "__main__":
 		mensagem_bytes, addr	= sock.recvfrom(BUFFERSIZE)
 		n_msg					= pickle.loads(mensagem_bytes)
 
+		#cria as strings que darao nome aos arquivos de logs
+		nom_arq_nchegou = "py-nchegou-"
+		nom_arq_desorde = "py-desorde-"
+		nom_arq_nchegou = nom_arq_nchegou + str(n_msg) 
+		nom_arq_desorde = nom_arq_desorde + str(n_msg)
+		nom_arq_nchegou = nom_arq_nchegou + ".txt" 
+		nom_arq_desorde = nom_arq_desorde + ".txt"
+
+		#cria os arquivos
+		f_nchegou = open(nom_arq_nchegou,"w")
+		f_desorde = open(nom_arq_desorde,"w")
+
+
 		#inicia variaveis usadas no recebimento de mensagens
 		num_anterior	= -1
 		chegou			= [0] * n_msg
@@ -60,19 +73,7 @@ if __name__ == "__main__":
 				break
 
 		#a partir daqui, no vetor "chegou", os indices com 0 não chegaram
-		#e o vetor desord guarda quem não chegou depois do numero anterior
-
-		#cria as strings que darao nome aos arquivos de logs
-		nom_arq_nchegou = "py-nchegou-"
-		nom_arq_desorde = "py-desorde-"
-		nom_arq_nchegou = nom_arq_nchegou + str(n_msg) 
-		nom_arq_desorde = nom_arq_desorde + str(n_msg)
-		nom_arq_nchegou = nom_arq_nchegou + ".txt" 
-		nom_arq_desorde = nom_arq_desorde + ".txt"
-
-		#cria os arquivos
-		f_nchegou = open(nom_arq_nchegou,"w")
-		f_desorde = open(nom_arq_desorde,"w")
+		#e o vetor desord guarda quem não chegou depois do numero anterior		
 
 		print(f"O recebimento de {n_msg} mensagens acabou, esperando mais...")
 

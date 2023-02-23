@@ -1,0 +1,46 @@
+Relatório do Trabalho de Redes II
+
+Alunos:
+João Lucas Cordeiro - GRR20190427
+João Gabriel Borges de Macedo - GRR20190429
+
+
+Códigos em C:
+
+cliente-udp.c
+servidor-udp.c
+
+Códigos em Python:
+
+cliente-udp.py
+servidor-udp.py
+
+
+Código do Cliente
+
+Primeiramente, verificamos se a quantidade de argumentos está correta. Se sim, continuamos a execução colocando os argumentos em variáveis.
+Então, conseguimos o endereço IP do servidor baseado em seu nome. Se não conseguirmos, encerramos a execução.
+Depois disso, abrimos o socket. Em caso de erro, encerramos o programa.
+Enfim, começamos a mandar mensagens ao servidor começando com a que indica quantas mensagens chegarão até ele.
+Depois disso, mandamos o número de mensagens solicitadas, com o número da mensagem no campo de dados de cada uma.
+Por fim, encerramos a execução do cliente.
+
+Código do servidor
+
+Começando, também verificamos o número de argumentos, assim como no cliente. Também guardamos o argumento em uma variável.
+Depois, conseguimos o nome do host (servidor) e também seu endereço IP. Caso não dè certo, encerramos o programa.
+Então, abrimos o socket e fazemos bind. Em caso de erro, encerramos a execução.
+Imprimimos o nome do servidor no terminal e começamos a esperar por mensagens.
+Recebemos então uma mensagem com a quantidade de mensagens que chegarão e, com isso, criamos os arquivos que guardarão as informações sobre a chegada de mensagens.
+Então, criamos dois vetores: chegou e desord.
+O vetor "chegou", no fim das mensagens, indicará se a mensagem de número igual ao índice do vetor chegou. Se no índice tivermos 0, ela não chegou, se tivermos 1, chegou.
+O vetor "desord", no fim das mensagens, indicará quais mensagens chagaram fora de ordem. Todos os números nesse vetor correspondem às mensagens que chegaram fora de ordem.
+Para cada mensagem que chegar, fazemos:
+-Se o número recebido anteriormente for maior que o recebido agora, a mensagem atual chegou fora de ordem. Logo, a colocamos em "desord"
+-Pegamos o número da mensagem atual e colocamos um "1" em seu índice no vetor "chegou".
+Nesse loop de recebimento de mensagens, se nenhuma mensagem chegar em 1 segundo, saímos do laço.
+Então, informamos no terminal que o recebimento das N mensagens acabou e que estamos esperando mais.
+Enfim escrevemos nos arquivos de log, guardando as mensagens que não chegaram em {c,py}-nchegou-N.txt e as que chegaram fora de ordem em {c,py}-desorde-N.txt
+
+
+Resultados

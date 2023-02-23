@@ -1,3 +1,7 @@
+// Autores:
+// João Lucas Cordeiro - GRR20190427
+// João Gabriel Borges de Macedo - GRR20190429
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
